@@ -26,3 +26,4 @@ base_platform/sw/hello_world.mips
 base_platform/sw/hello_world.o
 base_platform/main.o
 base_platform/platform.x
+
