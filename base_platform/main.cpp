@@ -56,9 +56,9 @@ int sc_main(int ac, char *av[]) {
   mips_proc2.init(ac, av);
   cerr << endl;
 
+  
   sc_start();
-  // mips_proc2.mips_isa.PauseProcessor();
-
+  mips_proc2.ISA.PauseProcessor();
   mips_proc1.PrintStat();
   mips_proc2.PrintStat();
   cerr << endl;
