@@ -37,6 +37,7 @@
 // 'using namespace' statement to allow access to all
 // mips-specific datatypes
 using namespace mips_parms;
+int llvalue = 0;
 
 static int processors_started = 0;
 #define DEFAULT_STACK_SIZE (256*1024)
@@ -96,6 +97,26 @@ void ac_behavior(end)
 {
   dbg_printf("@@@ end behavior @@@\n");
 }
+
+//!Instruction ll behavior method.
+// 102
+void ac_behavior( ll )
+{
+  dbg_printf("ll r%d, %d(r%d)\n", rt, imm & 0xFFFF, rs);
+  RB[rt] = DM.read(RB[rs]+ imm);
+  llvalue = RB[rt];
+  dbg_printf("Result = %#x\n", RB[rt]);
+};
+
+//!Instruction sc behavior method.
+// 133
+void ac_behavior( sc )
+{
+  dbg_printf("sc r%d, %d(r%d)\n", rt, imm & 0xFFFF, rs);
+  if (RB[rs] + imm == llvalue)
+    DM.write(RB[rs] + imm, RB[rt]);
+  dbg_printf("Result = %#x\n", RB[rs] + imm);
+};
 
 
 //!Instruction lb behavior method.
