@@ -24,14 +24,14 @@ const char *archc_options="-abi -dy ";
 #include "memory.h"
 #include "bus.h"
 
-int sc_main(int ac, char *av[])
-{
 
+int sc_main(int ac, char *av[]) {
   //!  ISA simulator
   mips mips_proc1("mips");
+  mips mips_proc2("mips_2");
   //! Bus
   ac_tlm_bus bus("bus");
-// Memory
+  // Memory
   ac_tlm_mem mem("mem");
 
 #ifdef AC_DEBUG
@@ -39,19 +39,35 @@ int sc_main(int ac, char *av[])
 #endif 
 
   mips_proc1.DM_port(bus.target_export);
+  mips_proc2.DM_port(bus.target_export);
   bus.MEM_port(mem.target_export);
 
+  int ac_aux = ac;
+  char av_aux[2][100];
+  strcpy(av_aux[0], av[0]);
+  strcpy(av_aux[1], av[1]);
+
   mips_proc1.init(ac, av);
+
+  ac = ac_aux; 
+  strcpy(av[0], av_aux[0]);
+  strcpy(av[1], av_aux[1]);
+  printf("%s %s\n", av[0], av[1]);
+  mips_proc2.init(ac, av);
   cerr << endl;
 
   sc_start();
+  // mips_proc2.mips_isa.PauseProcessor();
 
   mips_proc1.PrintStat();
+  mips_proc2.PrintStat();
   cerr << endl;
 
 #ifdef AC_STATS
   mips1_proc1.ac_sim_stats.time = sc_simulation_time();
   mips1_proc1.ac_sim_stats.print();
+  mips1_proc2.ac_sim_stats.time = sc_simulation_time();
+  mips1_proc2.ac_sim_stats.print();
 #endif 
 
 #ifdef AC_DEBUG
