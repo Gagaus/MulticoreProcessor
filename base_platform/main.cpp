@@ -55,7 +55,6 @@ int sc_main(int ac, char *av[]) {
   printf("%s %s\n", av[0], av[1]);
   mips_proc2.init(ac, av);
   cerr << endl;
-
   
   sc_start();
   mips_proc2.ISA.PauseProcessor();

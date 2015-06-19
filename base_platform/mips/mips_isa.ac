@@ -30,8 +30,8 @@ AC_ISA(mips){
   ac_format Type_I  = "%op:6 %rs:5 %rt:5 %imm:16:s";
   ac_format Type_J  = "%op:6 %addr:26";
 
-  ac_instr<Type_I> lb, lbu, lh, lhu, lw, lwl, lwr;
-  ac_instr<Type_I> sb, sh, sw, swl, swr;
+  ac_instr<Type_I> lb, lbu, lh, lhu, lw, lwl, lwr, ll;
+  ac_instr<Type_I> sb, sh, sw, swl, swr, sc;
   ac_instr<Type_I> addi, addiu, slti, sltiu, andi, ori, xori, lui;
   ac_instr<Type_R> add, addu, sub, subu, slt, sltu;
   ac_instr<Type_R> instr_and, instr_or, instr_xor, instr_nor;
@@ -90,7 +90,12 @@ AC_ISA(mips){
     lwr.set_asm("lwr %reg, \%lo(%exp)(%reg)", rt, imm, rs);
     lwr.set_asm("lwr %reg, (%reg)", rt, rs, imm=0);
     lwr.set_asm("lwr %reg, %imm (%reg)", rt, imm, rs);
-    lwr.set_decoder(op=0x26);
+    lwr.set_decoder(op=0x26);    
+
+    ll.set_asm("ll %reg, \%lo(%exp)(%reg)", rt, imm, rs);
+    ll.set_asm("ll %reg, (%reg)", rt, rs, imm=0);
+    ll.set_asm("ll %reg, %imm (%reg)", rt, imm, rs);
+    ll.set_decoder(op=0x30);
 
     sb.set_asm("sb %reg, \%lo(%exp)(%reg)", rt, imm, rs);
     sb.set_asm("sb %reg, (%reg)", rt, rs, imm=0);
@@ -114,6 +119,10 @@ AC_ISA(mips){
     swr.set_asm("swr %reg, (%reg)", rt, rs, imm=0);
     swr.set_asm("swr %reg, %imm (%reg)", rt, imm, rs);
     swr.set_decoder(op=0x2E);
+
+    sc.set_asm("sc %reg, (%reg)", rt, rs, imm=0);
+    sc.set_asm("sc %reg, %imm (%reg)", rt, imm, rs);
+    sc.set_decoder(op=0x38);
 
     addi.set_asm("addi %reg, %reg, %exp", rt, rs, imm);
     addi.set_asm("add %reg, %reg, %exp", rt, rs, imm);
