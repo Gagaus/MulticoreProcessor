@@ -55,18 +55,25 @@ ac_tlm_bus::~ac_tlm_bus()
 {
 }
 
+/** Mensagens aos processadores sao da seguinte forma:
+ * 0x7000xx == Pause o processador xx / 4
+ * 0x7010xx == Resume o processador xx/4
+ * */
+
 /// This is the transport method. Everything should go through this file.
 /// To connect more components, you will need to have an if/then/else or a switch
 /// statement inside this method. Notice that ac_tlm_req has an address field.
 ac_tlm_rsp ac_tlm_bus::transport(const ac_tlm_req &request) 
 {
     ac_tlm_rsp response;
+    if (request.addr < 5242880U)
+        response = MEM_port->transport(request);
+    else if (request.addr == 0x700000){
+        printf("VAI PAUSAR O PROC 0\n");
+    }
+    else if (request.addr == 0x700004){
+        printf("VAI PAUSAR O PROC 1\n");
+    }
     
-    response = MEM_port->transport(request);
-
     return response;
 }
-
-
-
-

@@ -3,20 +3,21 @@
 
 volatile int procCounter = 0;
 
-void RecursiveHello( int n, int procN) {
+void RecursiveHello( int n, int procN, int value) {
 	if (n) {
-		printf("Hi from processor PowerPC %d!\n", procN);
-		RecursiveHello(n-1, procN);
+		printf("Hi from processor PowerPC %d!, valor = %d\n", procN, value*64);
+		RecursiveHello(n-1, procN, (value * 2));
 	}
 }
 
 int main(int argc, char *argv[]){
 	int procN; 
-
 	// AcquireLock();
 	procN = procCounter;
 	procCounter++;
-	RecursiveHello(10, procN);
+    int *outro = (int*) (0x700000 + 4*procN);
+    *outro = 1000;
+	RecursiveHello(10, procN, 12);
 	// ReleaseLock();
 
 
