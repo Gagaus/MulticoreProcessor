@@ -1,8 +1,8 @@
 #include <stdio.h>
 
-#define N 100000
+#define N 256000
 #define N_PROC 8
-#define LOCK_ADDRESS 0x800000;
+#define LOCK_ADDRESS 0x400000;
 
 volatile int procCounter = 0;
 
@@ -15,10 +15,12 @@ typedef struct __lock_t {
 	int flag;
 } lock_t;
 
-lock_t *lock_aux = ( lock_t *) LOCK_ADDRESS;
+// lock_t *lock_aux = ( lock_t *) LOCK_ADDRESS;
 
 void lock_init(lock_t *lock) {
+    // printf("estou iniciando\n");
 	lock->flag = 0;
+    // printf("Valor do lock %d\n", lock->flag);
 }
 
 void lock(lock_t *lock) {
@@ -31,21 +33,26 @@ void lock(lock_t *lock) {
 			: "=r" (r), "=m"(*plock)
 			: "m" (*plock), "r" (one)
 			: );
-        printf("Me da meu lock flavio\n");
+        // printf("Me da meu lock flavio %d\n",*plock);
 	} while (!(r == 0 && one == 1  && *plock == 1));
 
-
+    // printf("Peguei o lock\n");
 }
 
 void unlock(lock_t *lock,  int procN) {
 	lock->flag = 0;
-	printf("Soltei o lock %d\n", procN);
+	// printf("Soltei o lock %d\n", procN);
 }
 
+
 int main(){
-    printf("Estou live\n");
+    // printf("Estou live\n");
     int procN, i; 
-    if (procCounter == 0) lock_init(lock_aux);
+    lock_t *lock_aux = ( lock_t *) LOCK_ADDRESS;
+    if (procCounter == 0) {
+        lock_init(lock_aux);       
+    }
+    // lock_aux = &lock_2;
 	lock(lock_aux);
     // Pros pauses e resumes funcionarem, os locks tem que estar funcionando
 	procN = procCounter;
@@ -57,8 +64,8 @@ int main(){
             vetor1[i] = i;
             vetor2[i] = i;
         }
-        for(i=1; i<N; i++){
-            int *vouAcordarOsOutros = (int*) 0x701000 + procN*4;
+        for(i=1; i<N_PROC; i++){
+            int *vouAcordarOsOutros = (int*) (0x701000 + 4*i);
             *vouAcordarOsOutros = 1000;
         }
     }
