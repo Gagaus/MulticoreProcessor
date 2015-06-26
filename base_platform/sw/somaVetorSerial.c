@@ -6,7 +6,6 @@
 #define LOCK_ADDRESS 0x400000;
 
 volatile int procCounter = 0;
-
 volatile int vetor1[N], vetor2[N];
 volatile int resultMap[N], resultReduce[8];
 
@@ -45,7 +44,6 @@ void unlock(lock_t *lock,  int procN) {
 	// printf("Soltei o lock %d\n", procN);
 }
 
-
 int main(){
     
     int procN, i; 
@@ -59,47 +57,28 @@ int main(){
 	procCounter++;
     unlock(lock_aux, procN);
 
-    if (procN==0){ // o processador 0 inicia os vetores e acorda os outros
+    if (procN == 0){
         for(i=0; i<N; i++){
             vetor1[i] = 1;
             vetor2[i] = 1;
         }
         for (i = 0; i < 8; i++)
             resultReduce[i] = 0;
-            
-        for(i=1; i<N_PROC; i++){
+        
+        for (i = 0; i < N; i++){
+            resultMap[i] = vetor1[i] + vetor2[i];
+        }
+        
+        for (i = 0; i < N; i++){
+            int resultFinal = 0;
+            for (i = 0; i < N; i++)
+                resultFinal += resultMap[i];
+            printf ("\n\n      ********    Resultado Final: %d    **********   \n\n\n", resultFinal);
+        }
+        for(i=1; i<N_PROC; i++){ // acorda os outros pro programa poder terminar
             int *vouAcordarOsOutros = (int*) (0x701000 + 4*i);
             *vouAcordarOsOutros = 1000;
         }
-    }
-    for (i = procN * N / N_PROC; i < (procN + 1) * N / N_PROC; i++){
-        resultMap[i] = vetor1[i] + vetor2[i];
-    }
-    
-    lock(lock_aux);
-    terminadoMap++;
-    unlock(lock_aux, procN);
-    
-    //while(terminadoMap < N_PROC) {} // espera todos terminarem o map
-    
-    for (i = procN * N / N_PROC; i < (procN + 1) * N / N_PROC; i++){
-        resultReduce[procN] += resultMap[i];
-    }
-    
-    lock(lock_aux);
-    terminadoReduce++;
-    unlock(lock_aux, procN);
-    
-    while(terminadoReduce < N_PROC) {} // espera todos terminarem o reduce
-    
-    
-    if (procN == 0){
-        lock(lock_aux);
-        int resultFinal = 0;
-        for (i = 0; i < N_PROC; i++)
-            resultFinal += resultReduce[i];
-        printf ("\n\n      ********    Resultado Final: %d    **********   \n\n\n", resultFinal);
-        unlock(lock_aux, procN);
     }
     
     return 0;
