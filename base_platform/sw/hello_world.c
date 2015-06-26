@@ -24,7 +24,11 @@ int main(int argc, char *argv[]){
     if (procN == 1){
         int *outro = (int*) (0x701000);
         *outro = 1000;
+        outro = (int*) (0x700004);
+        *outro = 1000;
     }
+    int *outro = (int*) (0x701004);
+    *outro = 1000;
 	// ReleaseLock();
 
 

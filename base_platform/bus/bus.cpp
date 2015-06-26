@@ -87,7 +87,14 @@ ac_tlm_rsp ac_tlm_bus::transport(const ac_tlm_req &request)
         proc0->ISA.ResumeProcessor();
     }
     else if (request.addr == 0x700004){
-        printf("Naom faco nada :( \n");
+        printf("VAI PAUSAR O PROC 1\n");        
+        proc1->ISA.PauseProcessor();
+        
+    }
+    else if (request.addr == 0x701004){
+        printf("VAI resumir O PROC 1\n");        
+        proc1->ISA.ResumeProcessor();
+        
     }
     
     return response;
