@@ -23,6 +23,7 @@ const char *archc_options="-abi -dy ";
 #include "mips.H"
 #include "memory.h"
 #include "bus.h"
+#include "off.h"
 
 
 int sc_main(int ac, char *av[]) {
@@ -39,6 +40,8 @@ int sc_main(int ac, char *av[]) {
   ac_tlm_bus bus("bus");
   // Memory
   ac_tlm_mem mem("mem");
+  // OFF
+  ac_tlm_off off("off");
 
 #ifdef AC_DEBUG
   ac_trace("mips1_proc1.trace");
@@ -53,6 +56,7 @@ int sc_main(int ac, char *av[]) {
   mips_proc6.DM_port(bus.target_export);
   mips_proc7.DM_port(bus.target_export);
   bus.MEM_port(mem.target_export);
+  bus.OFF_port(off.target_export);
 
   int ac_aux = ac;
   char av_aux[2][100];

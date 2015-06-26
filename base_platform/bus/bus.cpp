@@ -44,7 +44,8 @@ mips* proc0, *proc1, *proc2, *proc3, *proc4, *proc5, *proc6, *proc7;
 ac_tlm_bus::ac_tlm_bus(sc_module_name module_name):
   sc_module(module_name),
   target_export("iport"),
-  MEM_port("MEM_port", 5242880U) // This is the memory port, assigned for 5MB
+  MEM_port("MEM_port", 5242880U), // This is the memory port, assigned for 5MB
+  OFF_port("OFF_port", 80U) 
 {
     /// Binds target_export to the memory
     target_export(*this);
@@ -158,6 +159,10 @@ ac_tlm_rsp ac_tlm_bus::transport(const ac_tlm_req &request)
     else if (request.addr == 0x701000 + 7*4){
         //printf("VAI resumir O PROC 7\n");        
         proc7->ISA.ResumeProcessor();        
+    }
+    else if (request.addr == 0x701000 + 8*4){
+        //printf("VAI resumir O PROC 7\n");        
+        response = OFF_port->transport(request);     
     }
     
     return response;
