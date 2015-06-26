@@ -29,6 +29,12 @@ int sc_main(int ac, char *av[]) {
   //!  ISA simulator
   mips mips_proc0("mips");
   mips mips_proc1("mips_1");
+  mips mips_proc2("mips_2");
+  mips mips_proc3("mips_3");
+  mips mips_proc4("mips_4");
+  mips mips_proc5("mips_5");
+  mips mips_proc6("mips_6");
+  mips mips_proc7("mips_7");
   //! Bus
   ac_tlm_bus bus("bus");
   // Memory
@@ -40,6 +46,12 @@ int sc_main(int ac, char *av[]) {
 
   mips_proc0.DM_port(bus.target_export);
   mips_proc1.DM_port(bus.target_export);
+  mips_proc2.DM_port(bus.target_export);
+  mips_proc3.DM_port(bus.target_export);
+  mips_proc4.DM_port(bus.target_export);
+  mips_proc5.DM_port(bus.target_export);
+  mips_proc6.DM_port(bus.target_export);
+  mips_proc7.DM_port(bus.target_export);
   bus.MEM_port(mem.target_export);
 
   int ac_aux = ac;
@@ -55,14 +67,62 @@ int sc_main(int ac, char *av[]) {
   printf("%s %s\n", av[0], av[1]);
   mips_proc1.init(ac, av);
   
+  ac = ac_aux; 
+  strcpy(av[0], av_aux[0]);
+  strcpy(av[1], av_aux[1]);
+  printf("%s %s\n", av[0], av[1]);
+  mips_proc2.init(ac, av);
+  
+  ac = ac_aux; 
+  strcpy(av[0], av_aux[0]);
+  strcpy(av[1], av_aux[1]);
+  printf("%s %s\n", av[0], av[1]);
+  mips_proc3.init(ac, av);
+  
+  ac = ac_aux; 
+  strcpy(av[0], av_aux[0]);
+  strcpy(av[1], av_aux[1]);
+  printf("%s %s\n", av[0], av[1]);
+  mips_proc4.init(ac, av);
+  
+  ac = ac_aux; 
+  strcpy(av[0], av_aux[0]);
+  strcpy(av[1], av_aux[1]);
+  printf("%s %s\n", av[0], av[1]);
+  mips_proc5.init(ac, av);
+  
+  ac = ac_aux; 
+  strcpy(av[0], av_aux[0]);
+  strcpy(av[1], av_aux[1]);
+  printf("%s %s\n", av[0], av[1]);
+  mips_proc6.init(ac, av);
+  
+  ac = ac_aux; 
+  strcpy(av[0], av_aux[0]);
+  strcpy(av[1], av_aux[1]);
+  printf("%s %s\n", av[0], av[1]);
+  mips_proc7.init(ac, av);
+  
   procPointer(&mips_proc0, 0);
   procPointer(&mips_proc1, 1);
+  procPointer(&mips_proc2, 2);
+  procPointer(&mips_proc3, 3);
+  procPointer(&mips_proc4, 4);
+  procPointer(&mips_proc5, 5);
+  procPointer(&mips_proc6, 6);
+  procPointer(&mips_proc7, 7);
   cerr << endl;
   
   sc_start();
   
   mips_proc0.PrintStat();
   mips_proc1.PrintStat();
+  mips_proc2.PrintStat();
+  mips_proc3.PrintStat();
+  mips_proc4.PrintStat();
+  mips_proc5.PrintStat();
+  mips_proc6.PrintStat();
+  mips_proc7.PrintStat();
   cerr << endl;
 
 #ifdef AC_STATS
@@ -70,6 +130,18 @@ int sc_main(int ac, char *av[]) {
   mips1_proc0.ac_sim_stats.print();
   mips1_proc1.ac_sim_stats.time = sc_simulation_time();
   mips1_proc1.ac_sim_stats.print();
+  mips1_proc2.ac_sim_stats.time = sc_simulation_time();
+  mips1_proc2.ac_sim_stats.print();
+  mips1_proc3.ac_sim_stats.time = sc_simulation_time();
+  mips1_proc3.ac_sim_stats.print();
+  mips1_proc4.ac_sim_stats.time = sc_simulation_time();
+  mips1_proc4.ac_sim_stats.print();
+  mips1_proc5.ac_sim_stats.time = sc_simulation_time();
+  mips1_proc5.ac_sim_stats.print();
+  mips1_proc6.ac_sim_stats.time = sc_simulation_time();
+  mips1_proc6.ac_sim_stats.print();
+  mips1_proc7.ac_sim_stats.time = sc_simulation_time();
+  mips1_proc7.ac_sim_stats.print();
 #endif 
 
 #ifdef AC_DEBUG
