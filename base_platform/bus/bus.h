@@ -42,6 +42,7 @@
 // ArchC includes
 #include "ac_tlm_protocol.H"
 #include  "ac_tlm_port.H"
+#include "../mips/mips.H"
 
 //////////////////////////////////////////////////////////////////////////////
 
@@ -52,7 +53,7 @@ using tlm::tlm_transport_if;
 
 //#define DEBUG
 
-
+void procPointer(mips* proc, int id);
 /// A TLM memory
 class ac_tlm_bus :
   public sc_module,
@@ -62,7 +63,7 @@ public:
   /// Exposed port with ArchC interface
   sc_export<ac_tlm_transport_if> target_export;
   ac_tlm_port MEM_port;
-
+//ac_tlm_port ACT_port; // porta do activator
 
   /**
    * Implementation of TLM transport method that

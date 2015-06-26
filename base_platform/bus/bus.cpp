@@ -38,6 +38,7 @@
 
 //////////////////////////////////////////////////////////////////////////////
 
+mips* proc0, *proc1, *proc2, *proc3, *proc4, *proc5, *proc6, *proc7;
 
 /// Constructor
 ac_tlm_bus::ac_tlm_bus(sc_module_name module_name):
@@ -55,18 +56,109 @@ ac_tlm_bus::~ac_tlm_bus()
 {
 }
 
+void procPointer(mips* procx, int id){
+    if (id == 0) 
+        proc0 = procx;
+    else if (id == 1)
+        proc1 = procx;
+    else if (id == 2)
+        proc2 = procx;
+    else if (id == 3)
+        proc3 = procx;
+    else if (id == 4)
+        proc4 = procx;
+    else if (id == 5)
+        proc5 = procx;
+    else if (id == 6)
+        proc6 = procx;
+    else if (id == 7)
+        proc7 = procx;
+}
+
+/** Mensagens aos processadores sao da seguinte forma:
+ * 0x7000xx == Pause o processador xx / 4
+ * 0x7010xx == Resume o processador xx/4
+ * */
+
 /// This is the transport method. Everything should go through this file.
 /// To connect more components, you will need to have an if/then/else or a switch
 /// statement inside this method. Notice that ac_tlm_req has an address field.
 ac_tlm_rsp ac_tlm_bus::transport(const ac_tlm_req &request) 
 {
     ac_tlm_rsp response;
+    if (request.addr < 5242880U)
+        response = MEM_port->transport(request);
+    else if (request.addr == 0x700000){
+        printf("VAI PAUSAR O PROC 0\n");
+        proc0->ISA.PauseProcessor();
+    }
+    else if (request.addr == 0x701000){
+        printf("Vai resumir o processador 0!\n");
+        proc0->ISA.ResumeProcessor();
+    }
+    else if (request.addr == 0x700000 + 1*4){
+        printf("VAI PAUSAR O PROC 1\n");        
+        proc1->ISA.PauseProcessor();
+        
+    }
+    else if (request.addr == 0x701000  + 1*4){
+        printf("VAI resumir O PROC 1\n");        
+        proc1->ISA.ResumeProcessor();
+        
+    }
+    else if (request.addr == 0x700000 + 2*4){
+        printf("VAI PAUSAR O PROC 2\n");        
+        proc2->ISA.PauseProcessor();
+        
+    }
+    else if (request.addr == 0x701000 + 2*4){
+        printf("VAI resumir O PROC 2\n");        
+        proc2->ISA.ResumeProcessor();        
+    }
+    else if (request.addr == 0x700000 + 3*4){
+        printf("VAI PAUSAR O PROC 3\n");        
+        proc3->ISA.PauseProcessor();
+        
+    }
+    else if (request.addr == 0x701000 + 3*4){
+        printf("VAI resumir O PROC 3\n");        
+        proc3->ISA.ResumeProcessor();        
+    }
+    else if (request.addr == 0x700000 + 4*4){
+        printf("VAI PAUSAR O PROC 4\n");        
+        proc4->ISA.PauseProcessor();
+        
+    }
+    else if (request.addr == 0x701000 + 4*4){
+        printf("VAI resumir O PROC 4\n");        
+        proc4->ISA.ResumeProcessor();        
+    }
+    else if (request.addr == 0x700000 + 5*4){
+        printf("VAI PAUSAR O PROC 5\n");        
+        proc5->ISA.PauseProcessor();
+    }
+    else if (request.addr == 0x701000 + 5*4){
+        printf("VAI resumir O PROC 5\n");        
+        proc5->ISA.ResumeProcessor();        
+    }
+    else if (request.addr == 0x700000 + 6*4){
+        printf("VAI PAUSAR O PROC 6\n");        
+        proc6->ISA.PauseProcessor();
+        
+    }
+    else if (request.addr == 0x701000 + 6*4){
+        printf("VAI resumir O PROC 6\n");        
+        proc6->ISA.ResumeProcessor();        
+    }
+    else if (request.addr == 0x700000 + 7*4){
+        printf("VAI PAUSAR O PROC 7\n");        
+        proc7->ISA.PauseProcessor();
+        
+    }
+    else if (request.addr == 0x701000 + 7*4){
+        printf("VAI resumir O PROC 7\n");        
+        proc7->ISA.ResumeProcessor();        
+    }
     
-    response = MEM_port->transport(request);
-
     return response;
 }
-
-
-
-
