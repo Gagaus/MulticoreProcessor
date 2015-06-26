@@ -27,8 +27,8 @@ const char *archc_options="-abi -dy ";
 
 int sc_main(int ac, char *av[]) {
   //!  ISA simulator
-  mips mips_proc1("mips");
-  mips mips_proc2("mips_2");
+  mips mips_proc0("mips");
+  mips mips_proc1("mips_1");
   //! Bus
   ac_tlm_bus bus("bus");
   // Memory
@@ -38,8 +38,8 @@ int sc_main(int ac, char *av[]) {
   ac_trace("mips1_proc1.trace");
 #endif 
 
+  mips_proc0.DM_port(bus.target_export);
   mips_proc1.DM_port(bus.target_export);
-  mips_proc2.DM_port(bus.target_export);
   bus.MEM_port(mem.target_export);
 
   int ac_aux = ac;
@@ -47,26 +47,29 @@ int sc_main(int ac, char *av[]) {
   strcpy(av_aux[0], av[0]);
   strcpy(av_aux[1], av[1]);
 
-  mips_proc1.init(ac, av);
+  mips_proc0.init(ac, av);
 
   ac = ac_aux; 
   strcpy(av[0], av_aux[0]);
   strcpy(av[1], av_aux[1]);
   printf("%s %s\n", av[0], av[1]);
-  mips_proc2.init(ac, av);
+  mips_proc1.init(ac, av);
+  
+  procPointer(&mips_proc0, 0);
+  procPointer(&mips_proc1, 1);
   cerr << endl;
   
   sc_start();
-  mips_proc2.ISA.PauseProcessor();
+  
+  mips_proc0.PrintStat();
   mips_proc1.PrintStat();
-  mips_proc2.PrintStat();
   cerr << endl;
 
 #ifdef AC_STATS
+  mips1_proc0.ac_sim_stats.time = sc_simulation_time();
+  mips1_proc0.ac_sim_stats.print();
   mips1_proc1.ac_sim_stats.time = sc_simulation_time();
   mips1_proc1.ac_sim_stats.print();
-  mips1_proc2.ac_sim_stats.time = sc_simulation_time();
-  mips1_proc2.ac_sim_stats.print();
 #endif 
 
 #ifdef AC_DEBUG

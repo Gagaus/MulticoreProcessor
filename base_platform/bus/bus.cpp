@@ -38,6 +38,8 @@
 
 //////////////////////////////////////////////////////////////////////////////
 
+mips* proc0;
+mips* proc1;
 
 /// Constructor
 ac_tlm_bus::ac_tlm_bus(sc_module_name module_name):
@@ -55,6 +57,14 @@ ac_tlm_bus::~ac_tlm_bus()
 {
 }
 
+void procPointer(mips* proc, int id){
+    if (id == 0){
+        proc0 = proc;
+    }
+    else
+        proc1 = proc;
+}
+
 /** Mensagens aos processadores sao da seguinte forma:
  * 0x7000xx == Pause o processador xx / 4
  * 0x7010xx == Resume o processador xx/4
@@ -70,9 +80,14 @@ ac_tlm_rsp ac_tlm_bus::transport(const ac_tlm_req &request)
         response = MEM_port->transport(request);
     else if (request.addr == 0x700000){
         printf("VAI PAUSAR O PROC 0\n");
+        proc0->ISA.PauseProcessor();
+    }
+    else if (request.addr == 0x701000){
+        printf("Vai resumir o processador 0!\n");
+        proc0->ISA.ResumeProcessor();
     }
     else if (request.addr == 0x700004){
-        printf("VAI PAUSAR O PROC 1\n");
+        printf("Naom faco nada :( \n");
     }
     
     return response;
