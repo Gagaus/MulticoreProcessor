@@ -89,74 +89,74 @@ ac_tlm_rsp ac_tlm_bus::transport(const ac_tlm_req &request)
     if (request.addr < 5242880U)
         response = MEM_port->transport(request);
     else if (request.addr == 0x700000){
-        printf("VAI PAUSAR O PROC 0\n");
+        //printf("VAI PAUSAR O PROC 0\n");
         proc0->ISA.PauseProcessor();
     }
     else if (request.addr == 0x701000){
-        printf("Vai resumir o processador 0!\n");
+        //printf("Vai resumir o processador 0!\n");
         proc0->ISA.ResumeProcessor();
     }
     else if (request.addr == 0x700000 + 1*4){
-        printf("VAI PAUSAR O PROC 1\n");        
+        //printf("VAI PAUSAR O PROC 1\n");        
         proc1->ISA.PauseProcessor();
         
     }
     else if (request.addr == 0x701000  + 1*4){
-        printf("VAI resumir O PROC 1\n");        
+        //printf("VAI resumir O PROC 1\n");        
         proc1->ISA.ResumeProcessor();
         
     }
     else if (request.addr == 0x700000 + 2*4){
-        printf("VAI PAUSAR O PROC 2\n");        
+        //printf("VAI PAUSAR O PROC 2\n");        
         proc2->ISA.PauseProcessor();
         
     }
     else if (request.addr == 0x701000 + 2*4){
-        printf("VAI resumir O PROC 2\n");        
+        //printf("VAI resumir O PROC 2\n");        
         proc2->ISA.ResumeProcessor();        
     }
     else if (request.addr == 0x700000 + 3*4){
-        printf("VAI PAUSAR O PROC 3\n");        
+        //printf("VAI PAUSAR O PROC 3\n");        
         proc3->ISA.PauseProcessor();
         
     }
     else if (request.addr == 0x701000 + 3*4){
-        printf("VAI resumir O PROC 3\n");        
+        //printf("VAI resumir O PROC 3\n");        
         proc3->ISA.ResumeProcessor();        
     }
     else if (request.addr == 0x700000 + 4*4){
-        printf("VAI PAUSAR O PROC 4\n");        
+        //printf("VAI PAUSAR O PROC 4\n");        
         proc4->ISA.PauseProcessor();
         
     }
     else if (request.addr == 0x701000 + 4*4){
-        printf("VAI resumir O PROC 4\n");        
+        //printf("VAI resumir O PROC 4\n");        
         proc4->ISA.ResumeProcessor();        
     }
     else if (request.addr == 0x700000 + 5*4){
-        printf("VAI PAUSAR O PROC 5\n");        
+        //printf("VAI PAUSAR O PROC 5\n");        
         proc5->ISA.PauseProcessor();
     }
     else if (request.addr == 0x701000 + 5*4){
-        printf("VAI resumir O PROC 5\n");        
+        //printf("VAI resumir O PROC 5\n");        
         proc5->ISA.ResumeProcessor();        
     }
     else if (request.addr == 0x700000 + 6*4){
-        printf("VAI PAUSAR O PROC 6\n");        
+        //printf("VAI PAUSAR O PROC 6\n");        
         proc6->ISA.PauseProcessor();
         
     }
     else if (request.addr == 0x701000 + 6*4){
-        printf("VAI resumir O PROC 6\n");        
+        //printf("VAI resumir O PROC 6\n");        
         proc6->ISA.ResumeProcessor();        
     }
     else if (request.addr == 0x700000 + 7*4){
-        printf("VAI PAUSAR O PROC 7\n");        
+        //printf("VAI PAUSAR O PROC 7\n");        
         proc7->ISA.PauseProcessor();
         
     }
     else if (request.addr == 0x701000 + 7*4){
-        printf("VAI resumir O PROC 7\n");        
+        //printf("VAI resumir O PROC 7\n");        
         proc7->ISA.ResumeProcessor();        
     }
     
