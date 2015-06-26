@@ -1,0 +1,149 @@
+	.file	1 "lock.c"
+	.section .mdebug.abi32
+	.previous
+	.gnu_attribute 4, 3
+	.globl	lock_aux
+	.section	.sdata,"aw",@progbits
+	.align	2
+	.type	lock_aux, @object
+	.size	lock_aux, 4
+lock_aux:
+	.word	8388608
+	.text
+	.align	2
+	.globl	lock_init
+	.set	nomips16
+	.ent	lock_init
+	.type	lock_init, @function
+lock_init:
+	.frame	$fp,8,$31		# vars= 0, regs= 1/0, args= 0, gp= 0
+	.mask	0x40000000,-4
+	.fmask	0x00000000,0
+	.set	noreorder
+	.set	nomacro
+	addiu	$sp,$sp,-8
+	sw	$fp,4($sp)
+	move	$fp,$sp
+	sw	$4,8($fp)
+	lw	$2,8($fp)
+	sw	$0,0($2)
+	move	$sp,$fp
+	lw	$fp,4($sp)
+	addiu	$sp,$sp,8
+	j	$31
+	nop
+
+	.set	macro
+	.set	reorder
+	.end	lock_init
+	.size	lock_init, .-lock_init
+	.align	2
+	.globl	lock
+	.set	nomips16
+	.ent	lock
+	.type	lock, @function
+lock:
+	.frame	$fp,16,$31		# vars= 8, regs= 1/0, args= 0, gp= 0
+	.mask	0x40000000,-4
+	.fmask	0x00000000,0
+	addiu	$sp,$sp,-16
+	sw	$fp,12($sp)
+	move	$fp,$sp
+	sw	$4,16($fp)
+	lw	$2,16($fp)
+	sw	$2,0($fp)
+$L3:
+	lw	$3,0($fp)
+ #APP
+ # 21 "lock.c" 1
+	ll $2, 0($3) 
+
+ # 0 "" 2
+ #NO_APP
+	sw	$2,4($fp)
+	lw	$2,4($fp)
+	bne	$2,$0,$L3
+	li	$2,1			# 0x1
+	sw	$2,4($fp)
+	lw	$3,0($fp)
+ #APP
+ # 28 "lock.c" 1
+	sc $2, 0($3) 
+
+ # 0 "" 2
+ #NO_APP
+	sw	$2,4($fp)
+	lw	$2,4($fp)
+	bne	$2,$0,$L2
+	j	$L3
+$L2:
+	move	$sp,$fp
+	lw	$fp,12($sp)
+	addiu	$sp,$sp,16
+	j	$31
+	.end	lock
+	.size	lock, .-lock
+	.align	2
+	.globl	unlock
+	.set	nomips16
+	.ent	unlock
+	.type	unlock, @function
+unlock:
+	.frame	$fp,8,$31		# vars= 0, regs= 1/0, args= 0, gp= 0
+	.mask	0x40000000,-4
+	.fmask	0x00000000,0
+	.set	noreorder
+	.set	nomacro
+	addiu	$sp,$sp,-8
+	sw	$fp,4($sp)
+	move	$fp,$sp
+	sw	$4,8($fp)
+	lw	$2,8($fp)
+	sw	$0,0($2)
+	move	$sp,$fp
+	lw	$fp,4($sp)
+	addiu	$sp,$sp,8
+	j	$31
+	nop
+
+	.set	macro
+	.set	reorder
+	.end	unlock
+	.size	unlock, .-unlock
+	.rdata
+	.align	2
+$LC0:
+	.ascii	"Teste\000"
+	.text
+	.align	2
+	.globl	main
+	.set	nomips16
+	.ent	main
+	.type	main, @function
+main:
+	.frame	$fp,24,$31		# vars= 0, regs= 2/0, args= 16, gp= 0
+	.mask	0xc0000000,-4
+	.fmask	0x00000000,0
+	.set	noreorder
+	.set	nomacro
+	addiu	$sp,$sp,-24
+	sw	$31,20($sp)
+	sw	$fp,16($sp)
+	move	$fp,$sp
+	lui	$2,%hi($LC0)
+	addiu	$4,$2,%lo($LC0)
+	jal	printf
+	nop
+
+	move	$sp,$fp
+	lw	$31,20($sp)
+	lw	$fp,16($sp)
+	addiu	$sp,$sp,24
+	j	$31
+	nop
+
+	.set	macro
+	.set	reorder
+	.end	main
+	.size	main, .-main
+	.ident	"GCC: (GNU) 4.8.2"

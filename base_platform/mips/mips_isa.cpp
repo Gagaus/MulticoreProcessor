@@ -113,8 +113,13 @@ void ac_behavior( ll )
 void ac_behavior( sc )
 {
   dbg_printf("sc r%d, %d(r%d)\n", rt, imm & 0xFFFF, rs);
-  if (RB[rs] + imm == llvalue)
+  if (DM.read(RB[rs]+ imm) == llvalue) 
+  {
     DM.write(RB[rs] + imm, RB[rt]);
+    RB[rt] = 1;
+  }
+  else 
+    RB[rt] = 0;
   dbg_printf("Result = %#x\n", RB[rs] + imm);
 };
 
