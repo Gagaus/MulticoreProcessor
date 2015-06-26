@@ -6,10 +6,10 @@ CC = mips-elf-gcc
 CFLAGS = -msoft-float -specs=archc
 LDFLAGS = -lm
 
-TARGET = hello_world.mips
+TARGET = somaVetor.mips
 INC_DIR := -I.
 
-SRCS := hello_world.c
+SRCS := somaVetor.c
 OBJS := $(SRCS:.c=.o)
 
 #------------------------------------------------------
