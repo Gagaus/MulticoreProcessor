@@ -113,6 +113,14 @@ int sc_main(int ac, char *av[]) {
   procPointer(&mips_proc7, 7);
   cerr << endl;
   
+  mips_proc1.ISA.PauseProcessor();
+  mips_proc2.ISA.PauseProcessor();
+  mips_proc3.ISA.PauseProcessor();
+  mips_proc4.ISA.PauseProcessor();
+  mips_proc5.ISA.PauseProcessor();
+  mips_proc6.ISA.PauseProcessor();
+  mips_proc7.ISA.PauseProcessor();
+  
   sc_start();
   
   mips_proc0.PrintStat();
