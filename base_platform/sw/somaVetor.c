@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdint.h>
 
 #define N 256000
 #define N_PROC 8
@@ -7,9 +8,9 @@
 volatile int procCounter = 0;
 
 volatile int vetor1[N], vetor2[N];
-volatile int result[N];
+volatile int resultMap[N], resultReduce[8];
 
-volatile int terminados = 0;
+volatile int terminadoMap = 0, terminadoReduce = 0;
 
 typedef struct __lock_t {
 	int flag;
@@ -46,41 +47,60 @@ void unlock(lock_t *lock,  int procN) {
 
 
 int main(){
-    // printf("Estou live\n");
+    
     int procN, i; 
     lock_t *lock_aux = ( lock_t *) LOCK_ADDRESS;
     if (procCounter == 0) {
         lock_init(lock_aux);       
     }
-    // lock_aux = &lock_2;
+    
 	lock(lock_aux);
-    // Pros pauses e resumes funcionarem, os locks tem que estar funcionando
 	procN = procCounter;
 	procCounter++;
     unlock(lock_aux, procN);
 
     if (procN==0){ // o processador 0 inicia os vetores e acorda os outros
         for(i=0; i<N; i++){
-            vetor1[i] = i;
-            vetor2[i] = i;
+            vetor1[i] = 1;
+            vetor2[i] = 1;
         }
+        for (i = 0; i < 8; i++)
+            resultReduce[i] = 0;
+            
         for(i=1; i<N_PROC; i++){
             int *vouAcordarOsOutros = (int*) (0x701000 + 4*i);
             *vouAcordarOsOutros = 1000;
         }
     }
     for (i = procN * N / N_PROC; i < (procN + 1) * N / N_PROC; i++){
-        result[i] = vetor1[i] + vetor2[i];
+        resultMap[i] = vetor1[i] + vetor2[i];
     }
     
     lock(lock_aux);
-    terminados++;
-    if (terminados == N_PROC){
-        for (i = 0; i < N; i++)
-            printf ("%d ", result[i]);
-        printf ("\n");
-    }
+    terminadoMap++;
     unlock(lock_aux, procN);
+    
+    while(terminadoMap < N_PROC) {} // espera todos terminarem o map
+    
+    for (i = procN * N / N_PROC; i < (procN + 1) * N / N_PROC; i++){
+        resultReduce[procN] += resultMap[i];
+    }
+    
+    lock(lock_aux);
+    terminadoReduce++;
+    unlock(lock_aux, procN);
+    
+    while(terminadoReduce < N_PROC) {} // espera todos terminarem o reduce
+    
+    
+    if (procN == 0){
+        lock(lock_aux);
+        int resultFinal = 0;
+        for (i = 0; i < N_PROC; i++)
+            resultFinal += resultReduce[i];
+        printf ("\n\n      ********    Resultado Final: %d    **********   \n\n\n", resultFinal);
+        unlock(lock_aux, procN);
+    }
     
     return 0;
 }
